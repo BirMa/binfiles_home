@@ -1,0 +1,20 @@
+#! /bin/sh
+
+notify-send --urgency=normal --expire-time=2500 "Maintenance..." "Initialize maintenance..."
+n
+gksu "pacman -Syyu --noconfirm > $HOME/logs/Maintenance_etc.log"
+if [ $? -ne 0 ]; then
+  notify-send --urgency=critical "Maintenance..." "Pacman failed!"
+  exit 1
+fi
+
+notify-send --urgency=normal --expire-time=2500 "Maintenance..." "Syncing..."
+sync
+n u
+
+notify-send --urgency=normal --expire-time=2500 "Maintenance..." "Power off..."
+systemctl poweroff
+if [ $? -ne 0 ]; then
+  notify-send --urgency=critical "Maintenance..." "Poweroff failed!"
+  exit 1
+fi

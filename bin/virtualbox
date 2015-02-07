@@ -1,0 +1,5 @@
+#! /bin/sh
+
+gksu ~/bin/K_modVB
+/usr/bin/virtualbox
+

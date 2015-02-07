@@ -1,0 +1,130 @@
+#! /usr/bin/python3
+
+import argparse
+import subprocess
+import sys
+
+
+class mpv:
+    #ARG_defaults = [ '--display-fps=60', '--cache=200000' ]
+    ARG_defaults = [ '--display-fps=60', '--cache=4000000' ]
+    ARG_ytdl = '--ytdl'
+    ARG_ytdlFormat = '--ytdl-format='
+    binary = '/home/mw/share/mpv_git/build/mpv'
+
+
+class ytdl:
+    ARG_defaults = [ '--no-part' ]
+    ARG_listFormats = '--list-formats'
+    binary = 'youtube-dl'
+
+
+class commands:
+    MPV_noYtdl = 'noytdl'
+    MPV_ytdlAuto = 'a'
+    MPV_ytdlYT60Fps = 'yt'
+    MPV_ytdlYTOnlyAudio = 'yta'
+    YTDL_getFile = 'gf'
+    YTDL_listFormats = 'lf'
+
+
+CMD_table = {
+        commands.MPV_noYtdl : ['CMD_MPV_noYtdl', 'Don\'t use youtube-dl.'],
+        commands.MPV_ytdlAuto : ['CMD_MPV_ytdlAuto', 'Use the \'best\' format according to youtube-dl.'],
+        commands.MPV_ytdlYT60Fps : ['CMD_MPV_ytdlYt60Fps', 'Make youtube-dl use a format that gets us a 60fps video from youtube.'],
+        commands.MPV_ytdlYTOnlyAudio : ['CMD_MPV_ytdlYtOnlyAudio', 'Make youtube-dl use a format that gets us only audio from youtube.'],
+        commands.YTDL_getFile : ['CMD_YTDL_getFile', 'Download the file with youtube-dl\'s \'best\' format.'],
+        commands.YTDL_listFormats : ['CMD_YTDL_listFormats', 'Make youtube-dl list us all available formats.'],
+        }
+
+class argparse_strings:
+    helpProcArgs = 'Additional arguments passed directly to called process.'
+    helpCommand = 'Witch site and format. (default: \'%(default)s\') Possible values: {}'.format([[i+': '+CMD_table[i][1]+'\n'] for i in CMD_table])
+    helpSiteUri = 'Site with the desired video.'
+    metavarProcArgs = '\'<args for process>\''
+    metavarCommand = '<command>'
+    metavarSiteUri = '<URI to video>'
+
+    HELP = """
+    A simple mpv --ytdl wrapper.
+    """
+
+
+ARG_table = {
+        'CMD_MPV_noYtdl': [mpv.binary] + mpv.ARG_defaults,
+        'CMD_MPV_ytdlAuto' : [mpv.binary] + mpv.ARG_defaults + [mpv.ARG_ytdl],
+        'CMD_MPV_ytdlYt60Fps' : [mpv.binary] + mpv.ARG_defaults + [mpv.ARG_ytdl, mpv.ARG_ytdlFormat+'298+141'],
+        'CMD_MPV_ytdlYtOnlyAudio' : [mpv.binary] + mpv.ARG_defaults + [mpv.ARG_ytdl, mpv.ARG_ytdlFormat+'141'],
+        'CMD_YTDL_getFile' : [ytdl.binary] + ytdl.ARG_defaults,
+        'CMD_YTDL_listFormats' : [ytdl.binary] + ytdl.ARG_defaults + [ytdl.ARG_listFormats],
+        }
+
+
+CMD_alt_table = {
+        'CMD_MPV_ytdlAuto' : 'CMD_MPV_noYtdl',
+        'CMD_MPV_ytdlYt60Fps' : 'CMD_MPV_ytdlAuto',
+        'CMD_MPV_ytdlYtOnlyAudio' : 'CMD_MPV_ytdlAuto',
+        }
+
+
+def main():
+    args = setup_args()
+    procArgs = args.args.split()
+    uri = [args.site_uri]
+
+    curFunc = CMD_table[args.command][0]
+    while True:
+        mpvCallRet = call_proc(ARG_table[curFunc]+procArgs+uri)
+        if mpvCallRet == 0:
+            break
+        else:
+            try:
+                curFunc = CMD_alt_table[curFunc]
+            except KeyError:
+                print('ERROR: None of the registered methods succeeded.')
+                break
+
+            print('WARNING: {} returned non null \'{}\'; trying different args...'.format(mpv.binary, mpvCallRet))
+            print('\n========================================================')
+
+
+def call_proc(c):
+    print('Calling {}'.format(c))
+    try:
+        return subprocess.call(c, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=False)
+    except KeyboardInterrupt:
+        print('\nAborted...')
+        return 0
+
+
+def setup_args():
+    aparser = argparse.ArgumentParser(description=argparse_strings.HELP, add_help=True)
+
+    aparser.add_argument('--args',
+            action='store',
+            default='',
+            type=str,
+            help=argparse_strings.helpProcArgs,
+            metavar=argparse_strings.metavarProcArgs)
+
+    aparser.add_argument('command',
+            action='store',
+            nargs='?',
+            const=commands.MPV_ytdlAuto,
+            default=commands.MPV_ytdlAuto,
+            type=str,
+            help=argparse_strings.helpCommand,
+            metavar=argparse_strings.metavarCommand)
+
+    aparser.add_argument('site_uri',
+            action='store',
+            type=str,
+            help=argparse_strings.helpSiteUri,
+            metavar=argparse_strings.metavarSiteUri)
+
+    return aparser.parse_args()
+
+
+if __name__ == "__main__":
+    main()
+

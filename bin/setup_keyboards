@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# ~/.xinitrc
+#
+# TODO: might want to setup udev rule in
+# /etc/udev/rules.d/99-usb-keyboards.rules:
+# SUBSYSTEM=="input", ACTION=="add", RUN+="/usr/bin/su mw --command=setup_keyboards"
+
+setxkbmap \
+  -layout us \
+  -variant altgr-intl \
+  -option compose:caps \
+  -option terminate:ctrl_alt_bksp
+

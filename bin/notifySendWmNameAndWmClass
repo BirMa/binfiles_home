@@ -1,0 +1,18 @@
+#! /bin/sh
+
+A=$(xprop | grep --color=none '^WM_CLASS\|^WM_NAME\|^_NET_WM_PID' | sed 's/([^)]*)//')
+
+# Return with empty string if we didn't get any useful info
+if [[ -z "$A" ]]; then
+  notify-send -t 4000 "<no info>";
+  exit;
+fi
+
+# Get dir name for window in procfs
+B="/proc/$(echo "$A" | grep '^_NET_WM_PID' | awk '{print $3}')"
+
+# Make sure the window gave us a _net_wm_pid thing and get exec name from pid via procfs
+[[ -e "$B" ]] && A=$(echo "$A" | sed "s/_NET_WM_PID\ =\ /$(cat $B/stat | awk '{print $2}' | tr -d '()')\ -\ /")
+
+notify-send -t 8000 "$A"
+

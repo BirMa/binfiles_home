@@ -1,0 +1,21 @@
+#! /bin/sh
+
+if [[ -z $3 ]]; then
+  _chars='a-zA-Z0-9!#$%&()*+,-./:;<>=?@[]^_{|}~'
+else
+  _chars=$3
+fi
+
+if [[ -z $2 ]]; then
+  _lines=1
+else
+  _lines=$2
+fi
+
+if [[ -z $1 ]]; then
+  _length=24
+else
+  _length=$1
+fi
+
+tr -dc $_chars < /dev/urandom | fold -w$_length | head -n$_lines

@@ -1,0 +1,9 @@
+#! /bin/sh
+
+echo "wmname was '$(wmname)'"
+wmname 'LG3D' #make minecraft window resizable
+
+LD_LIBRARY_PATH='/usr/lib/jvm/java-7-openjdk/jre/lib/amd64/'
+
+java -jar ~/bin/Minecraft.jar
+

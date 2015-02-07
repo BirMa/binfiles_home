@@ -1,0 +1,49 @@
+#!/bin/sh
+
+ex=0
+mnt=1
+opt=0
+clear=0
+
+if [[ $# -gt 2 ]]; then
+  echo ":: wrong args"
+  exit 1
+fi
+
+
+if [[ $1 == 'n' ]]; then
+  mnt=0
+  shift
+fi
+
+if [[ $1 == 'o' ]]; then
+  opt=1
+  shift
+fi
+
+if [[ $1 == 'c' ]]; then
+  clear=1
+  shift
+fi
+
+
+if [[ $mnt -eq 1 ]]; then
+  (n > /dev/null) && (echo ':: nas-pkg-cache mounted';) || (echo ':: nas-pkg-cache mount failed'; exit 1;)
+fi
+
+if [[ $opt -eq 1 ]]; then
+  sudo pacman-optimize /var/lib/pacman/
+  exit
+fi
+
+if [[ $clear -eq 1 ]]; then
+  yaourt -Sc
+  exit
+fi
+
+if [[ $# -gt 0 ]]; then
+  yaourt -Syu $1
+else # workaround: yaourt fils to have additional arguments with -a
+  yaourt -Syua
+fi
+

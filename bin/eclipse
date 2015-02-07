@@ -1,0 +1,8 @@
+#! /bin/sh
+
+# For android emulator
+#gksu 'echo 1024 > /proc/sys/dev/hpet/max-user-freq'
+
+#GTK2_RC_FILES='/usr/share/themes/Aurora/gtk-2.0/gtkrc'
+/usr/bin/eclipse --launcher.ini $HOME/etc/eclipse.ini
+

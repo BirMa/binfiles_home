@@ -1,0 +1,6 @@
+#! /bin/sh
+
+STRACEDIR='/tmp/straceFiles'
+
+mkdir -p "$STRACEDIR"
+$(which strace) -D -y -f -tt -ff -a 120 -s 100 -o /tmp/straceFiles/ "$@"

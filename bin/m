@@ -1,0 +1,16 @@
+#! /bin/sh
+
+MOUNT_PATH='/mnt/H/multimedia'
+
+if [[ "$1" = "u" ]]; then
+  umount $MOUNT_PATH && exit 0
+  exit 1
+else
+  if [[ $(mount|grep -q "on\ $MOUNT_PATH";echo $?) -eq 1 ]]; then
+    mount $MOUNT_PATH && echo "$MOUNT_PATH" && exit 0
+    exit 1
+  else
+    echo "$MOUNT_PATH"
+  fi
+fi
+
