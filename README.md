@@ -2,7 +2,7 @@ README
 ======
 
 by BirMa
-<https://github.com/BirMa/dotfiles_main>
+<https://github.com/BirMa/binfiles_main>
 
 
 This is a collection of some useful scripts and bins.
