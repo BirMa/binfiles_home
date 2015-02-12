@@ -1,34 +1,8 @@
 #! /bin/sh
 
-if [[ -n "$(pidof thunar)" ]]; then
-  echo 'post xinitrc: thunar already running'
-else
-  echo 'post xinitrc: starting thunar'
-  thunar --daemon &
-fi
-
-
-if [[ -n "$(pidof pasystray)" ]]; then
-  echo 'post xinitrc: pasystray already running'
-else
-  echo 'post xinitrc: starting pasystray'
-  pasystray &
-fi
-
-
-if [[ -n "$(pidof nm-applet)" ]]; then
-  echo 'post xinitrc: nm-applet already running'
-else
-  echo 'post xinitrc: starting nm-applet'
-  nm-applet &
-fi
-
-
-if [[ -n "$(pidof urxvtd)" ]]; then
-  echo 'post xinitrc: urxvtd already running'
-else
-  echo 'post xinitrc: starting urxvtd'
-  #urxvtd --fork --opendisplay &
-  urxvtd --fork &
-fi
+gui_autostart_check 'conky' 'true'
+gui_autostart_check 'thunar' 'true'
+gui_autostart_check 'pasystray' 'true'
+gui_autostart_check 'nm-applet' 'true'
+noGui_autostart_check 'urxvtd' 'false'
 

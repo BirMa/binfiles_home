@@ -1,0 +1,35 @@
+#! /bin/sh
+#
+# return NOSTART:
+# No app was started.
+# Becaus it's already running.
+#
+# return START:
+# A app was started.
+# Because it was not running or we killed it in this script.
+
+app="$1"
+kill="$2"
+appsFound=0
+
+START=1
+NOSTART=0
+
+allPids="$(pidof $app)"
+for pid in $allPids; do
+  if [[ "$kill" = "true" ]]; then
+    echo "post xinitrc: $app already running on this machine, killing it..."
+    kill "$pid"
+  else
+    echo "post xinitrc: $app already running on this machine..."
+    let appsFound="$appsFound+1"
+  fi
+done
+
+if [[ $appsFound -le 0 ]]; then
+  echo "post xinitrc: starting $app"
+  "autostart_${app}" &
+  exit $START
+fi
+
+exit $NOSTART

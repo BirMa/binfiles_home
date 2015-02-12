@@ -1,0 +1,2 @@
+#! /bin/sh
+/usr/bin/awesome -c ${HOME}/.config/awesome/rc.lua
