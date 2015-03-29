@@ -8,21 +8,22 @@
 # A app was started.
 # Because it was not running or we killed it in this script.
 
+START=1
+NOSTART=0
+
 app="$1"
 kill="$2"
 appsFound=0
 
-START=1
-NOSTART=0
-
 allPids="$(pidof $app)"
 for pid in $allPids; do
   if [[ "$($(which cat) /proc/$pid/environ  | $(which tr) '\0' '\n' | $(which grep) '^DISPLAY\=' | sed 's|DISPLAY\=||')" = "$DISPLAY" ]]; then
+    echo "post xinitrc: $app already running for this display."
     if [[ "$kill" = "true" ]]; then
-      echo "post xinitrc: $app already running for this display, killing it..."
+      echo "post xinitrc: killing $app"
       kill "$pid"
     else
-      echo "post xinitrc: $app already running for this display..."
+      echo "post xinitrc: NOT killing $app"
       let appsFound="$appsFound+1"
     fi
   else

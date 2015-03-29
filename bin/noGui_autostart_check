@@ -8,20 +8,21 @@
 # A app was started.
 # Because it was not running or we killed it in this script.
 
+START=1
+NOSTART=0
+
 app="$1"
 kill="$2"
 appsFound=0
 
-START=1
-NOSTART=0
-
 allPids="$(pidof $app)"
 for pid in $allPids; do
+  echo "post xinitrc: $app already running on this machine"
   if [[ "$kill" = "true" ]]; then
-    echo "post xinitrc: $app already running on this machine, killing it..."
+    echo "post xinitrc: killing $app"
     kill "$pid"
   else
-    echo "post xinitrc: $app already running on this machine..."
+    echo "post xinitrc: NOT killing $app"
     let appsFound="$appsFound+1"
   fi
 done
