@@ -7,8 +7,7 @@ import sys
 
 class mpv:
   #ARG_defaults = [ '--display-fps=60', '--cache=200000' ]
-  #ARG_defaults = [ '--display-fps=60', '--cache=4000000', '--include-ads' ]
-  ARG_defaults = [ '--display-fps=60', '--cache=4000000', ]
+  ARG_defaults = [ '--display-fps=60', '--cache=4000000' ]
   ARG_ytdl = '--ytdl'
   ARG_ytdlFormat = '--ytdl-format='
   binary = '/home/mw/share/mpv_git/build/mpv'
@@ -16,7 +15,7 @@ class mpv:
 
 
 class ytdl:
-  ARG_defaults = [ '--no-part' ]
+  ARG_defaults = [ '--no-part', '--include-ads' ]
   ARG_listFormats = '--list-formats'
   ARG_format = '--format='
   binary = 'youtube-dl'
