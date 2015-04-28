@@ -10,7 +10,7 @@ class mpv:
   ARG_defaults = [ '--display-fps=60', '--cache=4000000' ]
   ARG_ytdl = '--ytdl'
   ARG_ytdlFormat = '--ytdl-format='
-  binary = '/home/mw/share/mpv_git/build/mpv'
+  binary = 'mpv'
   CMDid = 'CMD_MPV'
 
 
