@@ -5,4 +5,10 @@ if [[ ${EUID} -ne 0 ]]; then
   exit 1
 fi
 
-reflector --country Germany --country Switzerland --country Sweden --country Norway --country Netherlands --protocol https  --fastest 10 | sed '/^$/d' | sed '/^#/d' | sort -R | tee /etc/pacman.d/mirrorlist
+tmpListFile=$(mktemp)
+
+reflector --country Germany --country Switzerland --country Sweden --country Norway --country Netherlands --protocol https  --fastest 10 | sed '/^$/d' | sed '/^#/d' | sort -R | tee $tmpListFile 
+
+if [ $(yesNoQ --default yes 'write to mirrorlist [Y|n] ? ';echo $?) -eq 0 ]; then
+  cat $tmpListFile > /etc/pacman.d/mirrorlist
+fi
