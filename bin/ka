@@ -1,0 +1,27 @@
+#! /bin/sh
+
+# Keep an external HD spun up. Please don't use this with a SSD.
+
+if [ $# -ne 1 ]; then
+  echo "usage: $0 <mount-point>"
+  exit 1
+fi
+
+SleepTime='2s' # Gotta keep this low so we can react to traps quickly.
+
+Target="$1/.ka-$(uuidgen)"
+
+function quit {
+  echo
+  rm -v "$Target"
+  exit 0
+}
+
+trap quit SIGINT SIGTERM
+
+while : ;do
+  echo Writing \'$Target\'
+  echo "$(date)" > "$Target" || exit 2
+  sleep $SleepTime
+done
+
