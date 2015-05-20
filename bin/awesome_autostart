@@ -1,8 +1,7 @@
 #! /bin/sh
 
 gui_autostart_check 'conky' 'true'
-gui_autostart_check 'thunar' 'true'
-gui_autostart_check 'pasystray' 'true'
 gui_autostart_check 'nm-applet' 'true'
+gui_autostart_check 'pasystray' 'true'
+gui_autostart_check 'thunar' 'true'
 noGui_autostart_check 'urxvtd' 'false'
-
