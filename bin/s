@@ -1,34 +1,49 @@
 #!/bin/sh
+# TODO: Port this to python.
 
 ex=0
 mnt=1
+updPgkF=0
 opt=0
 clear=0
+sysUpdate=1
 
-if [[ $# -gt 2 ]]; then
-  echo ":: wrong args"
-  exit 1
-fi
-
-
+# Don't mount external package cache.
 if [[ $1 == 'n' ]]; then
   mnt=0
   shift
 fi
 
+# Update pkgfile database.
+if [[ $1 == 'u' ]]; then
+  updPgkF=1
+  shift
+fi
+
+# Optimize pacman database.
 if [[ $1 == 'o' ]]; then
   opt=1
   shift
 fi
 
+# Clear package caches.
 if [[ $1 == 'c' ]]; then
   clear=1
   shift
 fi
 
+# Clear package caches.
+if [[ $1 == 'noUpdate' ]]; then
+  sysUpdate=0
+  shift
+fi
 
 if [[ $mnt -eq 1 ]]; then
   (n > /dev/null) && (echo ':: nas-pkg-cache mounted';) || (echo ':: nas-pkg-cache mount failed'; exit 1;)
+fi
+
+if [[ $updPgkF -eq 1 ]]; then
+  sudo pkgfile --update
 fi
 
 if [[ $opt -eq 1 ]]; then
@@ -41,9 +56,13 @@ if [[ $clear -eq 1 ]]; then
   exit
 fi
 
-if [[ $# -gt 0 ]]; then
-  yaourt -Syu $1
-else # workaround: yaourt fils to have additional arguments with -a
-  yaourt -Syua
+if [[ $sysUpdate -eq 1 ]]; then
+  if [[ $# -gt 0 ]]; then #If we still have arguments, pass them to yaourt and hence to pacman.
+    # Workaround: In this case we can't pass the -a switch to yaourt, because it will ignore and pass it to pacman.
+    yaourt -Syu $@
+  else
+    yaourt -Syua
+  fi
+  exit
 fi
 
