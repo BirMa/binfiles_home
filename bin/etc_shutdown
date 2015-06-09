@@ -1,19 +1,45 @@
 #! /bin/sh
 
-notify-send --urgency=normal --expire-time=2500 "Maintenance..." "Initialize maintenance..."
-n
-gksu "pacman -Syyu --noconfirm > $HOME/logs/Maintenance_etc.log"
-if [ $? -ne 0 ]; then
-  notify-send --urgency=critical "Maintenance..." "Pacman failed!"
+if [[ ${EUID} -ne 0 ]]; then
+  notify-send --urgency=critical "Maintenance..." "need to be root"
+  echo 'need to be root'
   exit 1
 fi
 
+#
+notify-send --urgency=normal --expire-time=2500 "Maintenance..." "Running K_sync_pkg_cache..."
+K_sync_pkg_cache
+if [ $? -ne 0 ]; then
+  notify-send --urgency=critical "Maintenance..." "K_sync_pkg_cache failed!"
+  exit 1
+fi
+n
+
+#
+notify-send --urgency=normal --expire-time=2500 "Maintenance..." "System update..."
+pacman -Syyu --noconfirm > $HOME/logs/maintenance.log
+if [ $? -ne 0 ]; then
+  notify-send --urgency=critical "Maintenance..." "System update failed!"
+  exit 1
+fi
+
+
+#
+notify-send --urgency=normal --expire-time=2500 "Maintenance..." "Updating pkgfile database..."
+pkgfile --update
+if [ $? -ne 0 ]; then
+  notify-send --urgency=critical "Maintenance..." "Pkgfile database update failed!"
+  exit 1
+fi
+
+#
 notify-send --urgency=normal --expire-time=2500 "Maintenance..." "Syncing..."
 sync
 n u
 
+#
 notify-send --urgency=normal --expire-time=2500 "Maintenance..." "Power off..."
-systemctl poweroff
+systemctl powerofff
 if [ $? -ne 0 ]; then
   notify-send --urgency=critical "Maintenance..." "Poweroff failed!"
   exit 1
