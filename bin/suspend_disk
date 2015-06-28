@@ -1,5 +1,7 @@
 #! /bin/sh
 
+notify-send "Suspend to DISK" "Trying to suspend to disk."
+
 if [[ $1 = 'l' ]]; then
   slimlock &
 fi

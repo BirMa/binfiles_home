@@ -1,5 +1,7 @@
 #! /bin/sh
 
+notify-send "Suspend to RAM" "Trying to suspend to ram."
+
 if [[ $1 = 'l' ]]; then
   slimlock &
 fi
