@@ -6,184 +6,184 @@ import sys
 
 
 class mpv:
-  #ARG_defaults = [ '--display-fps=60', '--cache=200000' ]
-  ARG_defaults = [ '--display-fps=60', '--cache=4000000', '--ytdl-raw-options=include-ads=' ]
-  ARG_ytdl = '--ytdl'
-  ARG_ytdlFormat = '--ytdl-format='
-  binary = 'mpv'
-  CMDid = 'CMD_MPV'
+    #ARG_defaults = [ '--display-fps=60', '--cache=200000' ]
+    ARG_defaults = [ '--display-fps=60', '--cache=4000000', '--ytdl-raw-options=include-ads=' ]
+    ARG_ytdl = '--ytdl'
+    ARG_ytdlFormat = '--ytdl-format='
+    binary = 'mpv'
+    CMDid = 'CMD_MPV'
 
 
 class ytdl:
-  ARG_defaults = [ '--no-part', '--include-ads' ]
-  ARG_listFormats = '--list-formats'
-  ARG_format = '--format='
-  binary = 'youtube-dl'
-  CMDid = 'CMD_YTDL'
+    ARG_defaults = [ '--no-part', '--include-ads' ]
+    ARG_listFormats = '--list-formats'
+    ARG_format = '--format='
+    binary = 'youtube-dl'
+    CMDid = 'CMD_YTDL'
 
 
 class commands:
-  MPV_noYtdl = 'noytdl'
-  MPV_ytdlAuto = 'a'
-  MPV_ytdlYT60Fps = 'yt'
-  MPV_ytdlYTOnlyAudio = 'yta'
-  YTDL_getFile = 'gf'
-  YTDL_listFormats = 'lf'
+    MPV_noYtdl = 'noytdl'
+    MPV_ytdlAuto = 'a'
+    MPV_ytdlYT60Fps = 'yt'
+    MPV_ytdlYTOnlyAudio = 'yta'
+    YTDL_getFile = 'gf'
+    YTDL_listFormats = 'lf'
 
 
 CMD_table = {
-  commands.MPV_noYtdl : [mpv.CMDid+'_noYtdl', 'Don\'t use youtube-dl.'],
-  commands.MPV_ytdlAuto : [mpv.CMDid+'_ytdlAuto', 'Use the \'best\' format according to youtube-dl.'],
-  commands.MPV_ytdlYT60Fps : [mpv.CMDid+'_ytdlYt60Fps', 'Make youtube-dl use a format that gets us a 60fps video from youtube.'],
-  commands.MPV_ytdlYTOnlyAudio : [mpv.CMDid+'_ytdlYtOnlyAudio', 'Make youtube-dl use a format that gets us only audio from youtube.'],
-  commands.YTDL_getFile : [ytdl.CMDid+'_getFile', 'Download the file with youtube-dl\'s \'best\' format.'],
-  commands.YTDL_listFormats : [ytdl.CMDid+'_listFormats', 'Let youtube-dl list all available formats.'],
+    commands.MPV_noYtdl : [mpv.CMDid+'_noYtdl', 'Don\'t use youtube-dl.'],
+    commands.MPV_ytdlAuto : [mpv.CMDid+'_ytdlAuto', 'Use the \'best\' format according to youtube-dl.'],
+    commands.MPV_ytdlYT60Fps : [mpv.CMDid+'_ytdlYt60Fps', 'Make youtube-dl use a format that gets us a 60fps video from youtube.'],
+    commands.MPV_ytdlYTOnlyAudio : [mpv.CMDid+'_ytdlYtOnlyAudio', 'Make youtube-dl use a format that gets us only audio from youtube.'],
+    commands.YTDL_getFile : [ytdl.CMDid+'_getFile', 'Download the file with youtube-dl\'s \'best\' format.'],
+    commands.YTDL_listFormats : [ytdl.CMDid+'_listFormats', 'Let youtube-dl list all available formats.'],
 }
 
 
 class argparse_strings:
-  helpProcArgs = 'Additional arguments passed directly to called process.'
-  helpFormatString = 'Format string passed to youtube-dl, overrides implicit format of command (if any).'
-  helpCommand = 'Witch site and format. (default: \'%(default)s\') Possible values: {}'.format([[i+': '+CMD_table[i][1]+'\n'] for i in CMD_table])
-  helpSiteUri = 'Site with the desired video.'
-  metavarProcArgs = '\'<args for process>\''
-  metavarFormatString = '\'<formatNr>|<formatNrVideo>+<formatNrAudio>\''
-  metavarCommand = '<command>'
-  metavarSiteUri = '<URI to video>'
+    helpProcArgs = 'Additional arguments passed directly to called process.'
+    helpFormatString = 'Format string passed to youtube-dl, overrides implicit format of command (if any).'
+    helpCommand = 'Witch site and format. (default: \'%(default)s\') Possible values: {}'.format([[i+': '+CMD_table[i][1]+'\n'] for i in CMD_table])
+    helpSiteUri = 'Site with the desired video.'
+    metavarProcArgs = '\'<args for process>\''
+    metavarFormatString = '\'<formatNr>|<formatNrVideo>+<formatNrAudio>\''
+    metavarCommand = '<command>'
+    metavarSiteUri = '<URI to video>'
 
-  HELP = """
-  A simple mpv --ytdl wrapper.
-  """
+    HELP = """
+    A simple mpv --ytdl wrapper.
+    """
 
 
 ARG_table = {
-  mpv.CMDid+'_noYtdl': [mpv.binary] + mpv.ARG_defaults,
-  mpv.CMDid+'_ytdlAuto' : [mpv.binary] + mpv.ARG_defaults + [mpv.ARG_ytdl],
-  mpv.CMDid+'_ytdlYt60Fps' : [mpv.binary] + mpv.ARG_defaults + [mpv.ARG_ytdl],
-  mpv.CMDid+'_ytdlYtOnlyAudio' : [mpv.binary] + mpv.ARG_defaults + [mpv.ARG_ytdl],
-  ytdl.CMDid+'_getFile' : [ytdl.binary] + ytdl.ARG_defaults,
-  ytdl.CMDid+'_listFormats' : [ytdl.binary] + ytdl.ARG_defaults + [ytdl.ARG_listFormats],
+    mpv.CMDid+'_noYtdl': [mpv.binary] + mpv.ARG_defaults,
+    mpv.CMDid+'_ytdlAuto' : [mpv.binary] + mpv.ARG_defaults + [mpv.ARG_ytdl],
+    mpv.CMDid+'_ytdlYt60Fps' : [mpv.binary] + mpv.ARG_defaults + [mpv.ARG_ytdl],
+    mpv.CMDid+'_ytdlYtOnlyAudio' : [mpv.binary] + mpv.ARG_defaults + [mpv.ARG_ytdl],
+    ytdl.CMDid+'_getFile' : [ytdl.binary] + ytdl.ARG_defaults,
+    ytdl.CMDid+'_listFormats' : [ytdl.binary] + ytdl.ARG_defaults + [ytdl.ARG_listFormats],
 }
 
 
 FORMT_table = {
-  mpv.CMDid+'_noYtdl': '',
-  mpv.CMDid+'_ytdlAuto' : '',
-  mpv.CMDid+'_ytdlYt60Fps' : '298+141',
-  mpv.CMDid+'_ytdlYtOnlyAudio' : '141',
-  ytdl.CMDid+'_getFile' : '',
-  ytdl.CMDid+'_listFormats' : '',
+    mpv.CMDid+'_noYtdl': '',
+    mpv.CMDid+'_ytdlAuto' : '',
+    mpv.CMDid+'_ytdlYt60Fps' : '298+141',
+    mpv.CMDid+'_ytdlYtOnlyAudio' : '141',
+    ytdl.CMDid+'_getFile' : '',
+    ytdl.CMDid+'_listFormats' : '',
 }
 
 
 CMD_fallback_table = {
-  mpv.CMDid+'_ytdlAuto' : mpv.CMDid+'_noYtdl',
-  mpv.CMDid+'_ytdlYt60Fps' : mpv.CMDid+'_ytdlAuto',
-  mpv.CMDid+'_ytdlYtOnlyAudio' : mpv.CMDid+'_ytdlAuto',
+    mpv.CMDid+'_ytdlAuto' : mpv.CMDid+'_noYtdl',
+    mpv.CMDid+'_ytdlYt60Fps' : mpv.CMDid+'_ytdlAuto',
+    mpv.CMDid+'_ytdlYtOnlyAudio' : mpv.CMDid+'_ytdlAuto',
 }
 
 
 def buildFormtStr(curCMD, explicitFormatStr):
-  if explicitFormatStr == '':
-    frmtNum = FORMT_table[curCMD]
-  else:
-    frmtNum = explicitFormatStr
+    if explicitFormatStr == '':
+        frmtNum = FORMT_table[curCMD]
+    else:
+        frmtNum = explicitFormatStr
 
-  if curCMD.startswith(mpv.CMDid):
-    frmtPrefix = mpv.ARG_ytdlFormat
-  elif curCMD.startswith(ytdl.CMDid):
-    frmtPrefix = ytdl.ARG_format
+    if curCMD.startswith(mpv.CMDid):
+        frmtPrefix = mpv.ARG_ytdlFormat
+    elif curCMD.startswith(ytdl.CMDid):
+        frmtPrefix = ytdl.ARG_format
 
-  if frmtNum == '':
-    rawFrmt = ''
-  else:
-    rawFrmt = frmtPrefix+frmtNum
+    if frmtNum == '':
+        rawFrmt = ''
+    else:
+        rawFrmt = frmtPrefix+frmtNum
 
-  return rawFrmt
+    return rawFrmt
 
 
 def buildCmdLine(curCMD, procArgs, uri, explicitFormatStr):
-  formtStr = buildFormtStr(curCMD, explicitFormatStr)
+    formtStr = buildFormtStr(curCMD, explicitFormatStr)
 
-  if formtStr == '':
-    return ARG_table[curCMD]+procArgs+[uri]
-  else:
-    return ARG_table[curCMD]+[formtStr]+procArgs+[uri]
+    if formtStr == '':
+        return ARG_table[curCMD]+procArgs+[uri]
+    else:
+        return ARG_table[curCMD]+[formtStr]+procArgs+[uri]
 
 
 def call_proc(c):
-  print('Calling {}'.format(c))
-  try:
-    return subprocess.call(c, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=False)
-  except KeyboardInterrupt:
-    print('\nAborted...')
-    return 0
+    print('Calling {}'.format(c))
+    try:
+        return subprocess.call(c, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=False)
+    except KeyboardInterrupt:
+        print('\nAborted...')
+        return 0
 
 
 def setup_args():
-  aparser = argparse.ArgumentParser(description=argparse_strings.HELP, add_help=True)
+    aparser = argparse.ArgumentParser(description=argparse_strings.HELP, add_help=True)
 
-  aparser.add_argument('--args',
-    action='store',
-    default='',
-    type=str,
-    help=argparse_strings.helpProcArgs,
-    metavar=argparse_strings.metavarProcArgs)
+    aparser.add_argument('--args',
+        action='store',
+        default='',
+        type=str,
+        help=argparse_strings.helpProcArgs,
+        metavar=argparse_strings.metavarProcArgs)
 
-  aparser.add_argument('--f',
-    action='store',
-    default='',
-    type=str,
-    help=argparse_strings.helpFormatString,
-    metavar=argparse_strings.metavarFormatString)
+    aparser.add_argument('--f',
+        action='store',
+        default='',
+        type=str,
+        help=argparse_strings.helpFormatString,
+        metavar=argparse_strings.metavarFormatString)
 
-  aparser.add_argument('command',
-    action='store',
-    nargs='?',
-    const=commands.MPV_ytdlAuto,
-    default=commands.MPV_ytdlAuto,
-    type=str,
-    help=argparse_strings.helpCommand,
-    metavar=argparse_strings.metavarCommand)
+    aparser.add_argument('command',
+        action='store',
+        nargs='?',
+        const=commands.MPV_ytdlAuto,
+        default=commands.MPV_ytdlAuto,
+        type=str,
+        help=argparse_strings.helpCommand,
+        metavar=argparse_strings.metavarCommand)
 
-  aparser.add_argument('site_uri',
-    action='store',
-    type=str,
-    help=argparse_strings.helpSiteUri,
-    metavar=argparse_strings.metavarSiteUri)
+    aparser.add_argument('site_uri',
+        action='store',
+        type=str,
+        help=argparse_strings.helpSiteUri,
+        metavar=argparse_strings.metavarSiteUri)
 
-  return aparser.parse_args()
+    return aparser.parse_args()
 
 
 def main():
-  pArgs = setup_args()
-  explicitFormatStr = pArgs.f
-  procArgs = pArgs.args.split()
-  uri = pArgs.site_uri
+    pArgs = setup_args()
+    explicitFormatStr = pArgs.f
+    procArgs = pArgs.args.split()
+    uri = pArgs.site_uri
 
-  try:
-    curCMD = CMD_table[pArgs.command][0]
-  except KeyError as e:
-    print('ERROR: Unknown command: {}'.format(pArgs.command))
-    return 1
+    try:
+        curCMD = CMD_table[pArgs.command][0]
+    except KeyError as e:
+        print('ERROR: Unknown command: {}'.format(pArgs.command))
+        return 1
 
-  while True:
-    mpvCallRet = call_proc(buildCmdLine(curCMD, procArgs, uri, explicitFormatStr))
-    if mpvCallRet == 0:
-      break
-    else:
-      try:
-        curCMD = CMD_fallback_table[curCMD]
-      except KeyError:
-        print('ERROR: None of the registered methods succeeded.')
-        break
+    while True:
+        mpvCallRet = call_proc(buildCmdLine(curCMD, procArgs, uri, explicitFormatStr))
+        if mpvCallRet == 0:
+            break
+        else:
+            try:
+                curCMD = CMD_fallback_table[curCMD]
+            except KeyError:
+                print('ERROR: None of the registered methods succeeded.')
+                break
 
-      print('WARNING: {} returned non null \'{}\'; trying different args...'.format(mpv.binary, mpvCallRet))
-      print('\n========================================================')
+            print('WARNING: {} returned non null \'{}\'; trying different args...'.format(mpv.binary, mpvCallRet))
+            print('\n========================================================')
 
-  return 0
+    return 0
 
 
 if __name__ == "__main__":
-  sys.exit(main())
+    sys.exit(main())
 
