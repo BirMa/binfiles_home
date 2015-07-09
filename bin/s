@@ -65,4 +65,3 @@ if [[ $sysUpdate -eq 1 ]]; then
   fi
   exit
 fi
-
