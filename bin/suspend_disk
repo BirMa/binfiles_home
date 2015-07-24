@@ -2,8 +2,13 @@
 
 notify-send "Suspend to DISK" "Trying to suspend to disk."
 
-if [[ $1 = 'l' ]]; then
-  slimlock &
+systemctl hibernate &
+
+if [[ $? -ne 0 ]]; then
+  notify-send --urgency=critical "Suspend to DISK" "FAILED"
+  exit 1
 fi
 
-systemctl hibernate &
+if [[ $1 = 'l' ]]; then
+  lockScreen &
+fi

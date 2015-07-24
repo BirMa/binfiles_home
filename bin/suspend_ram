@@ -2,8 +2,13 @@
 
 notify-send "Suspend to RAM" "Trying to suspend to ram."
 
-if [[ $1 = 'l' ]]; then
-  slimlock &
+systemctl suspend &
+
+if [[ $? -ne 0 ]]; then
+  notify-send --urgency=critical "Suspend to RAM" "FAILED"
+  exit 1
 fi
 
-systemctl suspend &
+if [[ $1 = 'l' ]]; then
+  lockScreen &
+fi
