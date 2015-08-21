@@ -1,0 +1,7 @@
+#! /usr/bin/bash
+
+if [[ -f ~/share/mpv_git/build/mpv ]]; then
+  ~/share/mpv_git/build/mpv "$@"
+else
+  /usr/bin/mpv "$@"
+fi
