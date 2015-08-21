@@ -5,12 +5,16 @@ import subprocess
 import sys
 
 
+class general:
+    RetryWithDifferentArgs = True
+
 class mpv:
     #ARG_defaults = [ '--display-fps=60', '--cache=200000' ]
     ARG_defaults = [ '--display-fps=60', '--cache=4000000', '--ytdl-raw-options=include-ads=' ]
     ARG_ytdl = '--ytdl'
     ARG_ytdlFormat = '--ytdl-format='
-    binary = 'mpv'
+    binary = '/home/mw/share/mpv_git/build/mpv'
+    #binary = 'mpv'
     CMDid = 'CMD_MPV'
 
 
@@ -18,7 +22,8 @@ class ytdl:
     ARG_defaults = [ '--no-part', '--include-ads' ]
     ARG_listFormats = '--list-formats'
     ARG_format = '--format='
-    binary = 'youtube-dl'
+    #binary = '/usr/bin/youtube-dl'
+    binary = '/home/mw/share/youtube-dl/bin/youtube-dl'
     CMDid = 'CMD_YTDL'
 
 
@@ -171,7 +176,7 @@ def main():
         mpvCallRet = call_proc(buildCmdLine(curCMD, procArgs, uri, explicitFormatStr))
         if mpvCallRet == 0:
             break
-        else:
+        elif general.RetryWithDifferentArgs:
             try:
                 curCMD = CMD_fallback_table[curCMD]
             except KeyError:
@@ -180,6 +185,8 @@ def main():
 
             print('WARNING: {} returned non null \'{}\'; trying different args...'.format(mpv.binary, mpvCallRet))
             print('\n========================================================')
+        else:
+            break
 
     return 0
 
